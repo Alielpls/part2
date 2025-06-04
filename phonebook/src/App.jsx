@@ -1,18 +1,23 @@
-import { use, useState } from "react";
+import { useEffect, useState } from "react";
+import phonebookService from "./services/phonebook"
 import Filter from "./components/filter";
 import Person from "./components/person";
 import Form from "./components/form";
 
 const App=()=>{
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '040-123456', id: 1 },
-    { name: 'Ada Lovelace', number: '39-44-5323523', id: 2 },
-    { name: 'Dan Abramov', number: '12-43-234345', id: 3 },
-    { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 }
-  ])
+  const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filterName, setFilterName] = useState('')
+
+  useEffect(() => {
+    phonebookService.getAll()
+      .then(initialPersons => {
+        setPersons(initialPersons)
+        console.log(initialPersons)
+      }
+    )
+  }, [])
 
   const handleNameChange = (event) =>{
     setNewName(event.target.value);
@@ -30,15 +35,25 @@ const App=()=>{
 
   const addName = (event) =>{
     event.preventDefault();
-    const objectNewName = {name:newName, number: newNumber, id:(persons.length+1)}
+    const objectNewName = {name:newName, number: newNumber}
 
     if(persons.find(person => person.name.toLowerCase() === objectNewName.name.toLowerCase()) !== undefined){
       alert(`${objectNewName.name} is already added on the phonebook!`)
     }else{
-      setPersons(persons.concat(objectNewName));
-      setNewName('');
-      setNewNumber('');
+      phonebookService.create(objectNewName)
+        .then(createdObject => {
+          setPersons(persons.concat(createdObject));
+          setNewName('');
+          setNewNumber('');
+        }) 
     }
+  }
+
+  const deleteLine = (person) =>{
+    if(window.confirm(`Do you want to delete ${person.name} ?`)){
+        phonebookService.destroy(person.id)
+        .then(setPersons(persons.filter(p => p.id !== person.id)))
+      }
   }
 
    const filteredPersons = filterName.trim() === '' ? persons : persons.filter(person=>person.name.toLowerCase().includes(filterName.toLowerCase().trim()))
@@ -49,7 +64,7 @@ const App=()=>{
       <Filter filterName={filterName} onChange={handleFilterChange} />
       <Form addName={addName} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange} />
       <h2>Numbers</h2>
-      <Person filteredPersons={filteredPersons} />
+      <Person filteredPersons={filteredPersons} deleteLine={deleteLine} />
     </div>
   )
 }

@@ -1,9 +1,9 @@
 import PersonLine from "./personLine"
 
-const Person = ({filteredPersons}) => {
+const Person = ({filteredPersons, deleteLine}) => {
     return(
         <ul>
-            {filteredPersons.map(person=> <PersonLine key={person.id} person={person} />)}
+            {filteredPersons.map(person=> <PersonLine key={person.id} person={person} deleteLine={deleteLine} />)}
         </ul>
     )
 }

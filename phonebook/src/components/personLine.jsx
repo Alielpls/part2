@@ -1,8 +1,12 @@
-const PersonLine = ({person}) =>{
+const PersonLine = ({person, deleteLine}) =>{
     // console.log(person);
     return(
         <div>
-            <li> {person.name} - {person.number}</li>
+            <li> 
+                {person.name} - {person.number}
+                <button onClick={()=>deleteLine(person)}> delete</button>
+            </li>
+          
         </div>
     )
 }
