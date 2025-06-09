@@ -1,18 +1,13 @@
-import { useEffect, useState } from 'react'
-import WeatherInfo from "./weatherInfo"
-import weatherService from '../services/weather'
-
 const CountryInfo = ({country}) =>{
-
-    const [weatherData, setweatherData] = useState(null)
-    console.log(country.capitalInfo.latlng[0])
-
-    useEffect(()=>{
-        console.log('use Effect, country Info')
-        weatherService.getWeather(country.capitalInfo.latlng)
-            .then(returnedWeather => console.log('weather: ', returnedWeather))
-    },[])
-
+    const flagStyle ={
+        "width":400,
+        "height":300,
+        "paddingRight":50
+    }
+    const coatStyle ={
+        "width":400,
+        "height":400
+    }
 
     return(
         <div>
@@ -20,12 +15,13 @@ const CountryInfo = ({country}) =>{
             <h2>{country.name.official}</h2>
             <p>Capital: {country.capital[0]}</p>
             <p>Area: {country.area} km²</p>
+            <p>Population: {country.population} </p>
             <h2>Languages:</h2>
             <ul>
                 {Object.values(country.languages).map(lang =><li key={lang}>{lang}</li>)}
             </ul>
-            <img src={country.flags.png} alt={country.flags.alt}/>
-            <WeatherInfo weatherData={weatherData}/>
+            <img style={flagStyle} src={country.flags.png} alt={country.flags.alt}/>
+            <img style={coatStyle} src={country.coatOfArms.png}/>
         </div>
     )
 

@@ -4,7 +4,7 @@ import countryService from './services/country'
 
 const App = () => {
 
-  const [country, setCountry] = useState([])
+  const [countryList, setCountryList] = useState([])
   const [value, setValue] = useState('')
   const [countrySelected, setCountrySelected] = useState(null)
 
@@ -13,13 +13,13 @@ const App = () => {
     console.log('use efect')
     countryService.getAll()
       .then(
-        initialCountries => setCountry(initialCountries)
+        initialCountries => setCountryList(initialCountries)
       )
   },[])
 
   const onChangeHandler = (event) => {
     setValue(event.target.value)
-    setCountrySelected(null)
+    setCountrySelected(null) // remove the selected priority
   }
 
   const onCountrySelection = (c) => {
@@ -28,8 +28,9 @@ const App = () => {
       setCountrySelected(c)
   }
   
+  // sets a priority for what is clicked to be shown
   const filterReference = countrySelected === null ? value.toLowerCase().trim() : countrySelected.toLowerCase().trim()
-  const filteredCountries = value.trim() === '' ? country : country.filter(c => c.name.common.toLowerCase().includes(filterReference))
+  const filteredCountries = value.trim() === '' ? countryList : countryList.filter(c => c.name.common.toLowerCase().includes(filterReference))
 
   return (
     <div>

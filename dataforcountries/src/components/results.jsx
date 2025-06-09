@@ -1,7 +1,7 @@
 import CountryInfo from "./countryInfo"
 
 const Results = ({countries, onCountrySelection}) => {
-    console.log(countries.length);
+    console.log('countries found:', countries.length);
     if(countries.length > 10){
         return(
             <div>
@@ -15,7 +15,15 @@ const Results = ({countries, onCountrySelection}) => {
                 <CountryInfo country={countries[0]} />
             </div>
         )
-    }else{
+    }else
+    if(countries.length === 0){
+        return(
+            <div>
+                <p>No results.</p>
+            </div>
+        )
+    }
+    else{
         return(
             <div>
                 {countries.map(c=> 
